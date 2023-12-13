@@ -9,12 +9,12 @@
  */
 void mod_top_two_elements(stack_t **head, unsigned int counter)
 {
-	stack_t *current = *head;
+	stack_t *active = *head;
 	int len = 0, result;
 
-	while (current)
+	while (active)
 	{
-		current = current->next;
+		active = active->next;
 		len++;
 	}
 
@@ -27,9 +27,9 @@ void mod_top_two_elements(stack_t **head, unsigned int counter)
 		exit(EXIT_FAILURE);
 	}
 
-	current = *head;
+	active = *head;
 
-	if (current->n == 0)
+	if (active->n == 0)
 	{
 		fprintf(stderr, "L%d: division by zero\n", counter);
 		fclose(bus.file);
@@ -38,9 +38,8 @@ void mod_top_two_elements(stack_t **head, unsigned int counter)
 		exit(EXIT_FAILURE);
 	}
 
-	result = current->next->n % current->n;
-	current->next->n = result;
-	*head = current->next;
-	free(current);
+	result = active->next->n % active->n;
+	active->next->n = result;
+	*head = active->next;
+	free(active);
 }
-
