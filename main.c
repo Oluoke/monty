@@ -1,53 +1,84 @@
 #include "monty.h"
-#include <stdio.h>
-
-bus_t bus = {NULL, NULL, NULL, 0};
+stack_t *first = NULL;
 
 /**
- * main - Interprets Monty code
- * @argc: Number of arguments
- * @argv: Monty file location
- * Return: 0
+ * main - Entry point
+ * @argc: Arguments count
+ * @argv: List of arguments
+ * Return: Always 0
  */
 int main(int argc, char *argv[])
 {
-	char *content;
-	FILE *file;
-	ssize_t read_line = 1;
-	stack_t *stack = NULL;
-	unsigned int counter = 0;
-
 	if (argc != 2)
 	{
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
-	file = fopen(argv[1], "r");
-	bus.file = file;
+	open_file(argv[1]);
+	free_nodes();
+	return (0);
+}
 
-	if (!file)
+/**
+ * create_node - Creates node.
+ * @n: Number to go into the node.
+ * Return: a pointer to the node. Otherwise NULL.
+ */
+stack_t *create_node(int n)
+{
+	stack_t *node = malloc(sizeof(stack_t));
+
+	if (node == NULL)
+		err(4);
+
+	node->next = NULL;
+	node->prev = NULL;
+	node->n = n;
+
+	return (node);
+}
+
+/**
+ * free_nodes - Frees the nodes in the stack.
+ */
+void free_nodes(void)
+{
+	stack_t *t_mp;
+
+	if (first == NULL)
+	return;
+
+	for (t_mp = first; t_mp != NULL;)
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-		exit(EXIT_FAILURE);
+		first = first->next;
+		free(t_mp);
+		t_mp = first;
+	}
+}
+
+/**
+ * add_to_queue - Add nodes to the queue.
+ * @new_node: Pointer to the new node.
+ * @ln: Line number of the opcode.
+ */
+void add_to_queue(stack_t **new_node, __attribute__((unused)) unsigned int ln)
+{
+	stack_t *t_mp;
+
+	if (new_node == NULL || *new_node == NULL)
+	exit(EXIT_FAILURE);
+
+	if (first == NULL)
+	{
+	first = *new_node;
+	return;
 	}
 
-	while (read_line > 0)
-	{
-		content = NULL;
-		bus.content = content;
-		counter++;
+	t_mp = first;
+	while (t_mp->next != NULL)
+	t_mp = t_mp->next;
 
-		if (read_line > 0)
-		{
-			execute(content, &stack, counter, file);
-		}
-
-		free(content);
-	}
-
-	free_stack(stack);
-	fclose(file);
-
-	return 0;
+	t_mp->next = *new_node;
+	(*new_node)->prev = t_mp;
 }
