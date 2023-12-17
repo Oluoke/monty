@@ -5,16 +5,12 @@ stack_t *first = NULL;
 * main - monty code interpreter
 * @argc: number of arguments
 * @argv: monty file location
-* Return: 0 on success
+* Return: 0
 */
- * main - Entry point
- * @argc: Arguments count
- * @argv: List of arguments
- * Return: Always 0
- */
 int main(int argc, char *argv[])
 {
 	if (argc != 2)
+
 	{
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
@@ -55,13 +51,11 @@ void free_nodes(void)
 
 	for (t_mp = first; t_mp != NULL;)
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-		exit(EXIT_FAILURE);
 		first = first->next;
 		free(t_mp);
 		t_mp = first;
+
 	}
-	while (read_line > 0)
 }
 
 /**
